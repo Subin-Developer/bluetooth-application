@@ -5,19 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class ScanResultTile extends StatelessWidget {
-  final ScanResult result;
+  final String dname;
+  final String devicepower;
   final VoidCallback onTap;
 
   const ScanResultTile({
-    required this.result,
-    required this.onTap,
+    required this.onTap, required this.dname, required this.devicepower,
   });
 
   @override
   Widget build(BuildContext context) {
     // Implement the UI for the ScanResultTile
     return ListTile(
-      title: Text(result.toString()),
+      title: Text(dname),
       onTap: onTap,
     );
   }
@@ -89,11 +89,12 @@ class FindDevicesScreen extends StatelessWidget {
     children: snapshot.data!
       .map(
         (r) => ScanResultTile(
-          result: r,
+          devicepower: r.advertisementData.localName,
+          dname: r.device.name,
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             r.device.connect();
             return DeviceScreen(device: r.device);
-          })),
+          })), 
         ),
       )
       .toList(),
